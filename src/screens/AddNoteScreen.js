@@ -1,25 +1,34 @@
-import { View, Text, Keyboard, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState} from 'react'
+import { View, Text, Keyboard, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native'
+import React, { useState } from 'react'
+import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../../config'
 
 const AddNoteScreen = () => {
+  const navigation = useNavigation();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [data, setData] = useState('');
+  const now = new Date();
 
   const handleAdd = () => { 
-    firebase.firestore().collection('notes')
-      .add({ title: title, body: body, data: data })
+    if (title && title.length > 0) { 
+      firebase.firestore().collection('notes')
+      .add({ title: title, body: body, date: now })
       .then((res) => { 
         setTitle('')
         setBody('')
-        setData('')
         Keyboard.dismiss();
+        navigation.navigate('HomeScreen')
       })
       .catch((ex) => console.log(`Error saving data, ${ex}`))//alert
+    } else {
+      Alert.alert("Title can not be empty!")
+    }
   }
   return (
     <View style={styles.container}>
+      
+      <Text style={styles.title}>New Note</Text>
+
       <TextInput
         style={styles.input}
         placeholderTextColor={'#A5D7E8'}
@@ -31,13 +40,8 @@ const AddNoteScreen = () => {
         placeholderTextColor={'#A5D7E8'}
         placeholder='Body'
         value={body}
+        multiline
         onChangeText={(text) => setBody(text)} />
-      <TextInput
-        style={styles.input}
-        placeholderTextColor={'#A5D7E8'}
-        placeholder='Data'
-        value={data}
-        onChangeText={(text) => setData(text)} />
       
       <TouchableOpacity
         style={styles.btn}
@@ -60,7 +64,26 @@ const styles = StyleSheet.create({
     width: '100%',
     height:'8%'
   },
-  btn: {},
+  btn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: '#009FBD',
+  },
+  title: {
+    marginTop: 0,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: '#20232a',
+    backgroundColor: '#0B2447',
+    color: '#A5D7E8',
+    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
 })
 
 export default AddNoteScreen

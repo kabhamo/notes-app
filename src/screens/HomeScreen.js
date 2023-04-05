@@ -1,7 +1,8 @@
-import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native'
-import React, { useState, useEffect} from 'react'
+import { View, Text, FlatList, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { firebase } from '../../config'
+import { firebase } from '../../config';
+import { Entypo } from '@expo/vector-icons';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -13,8 +14,8 @@ const HomeScreen = () => {
       .onSnapshot((querySnapshot) => { 
         const newNotes = [];
         querySnapshot.forEach((doc) => { 
-          const { title, body, data } = doc.data()
-          newNotes.push({id: doc.id, title: title, body:body, data:data})
+          const { title, body, date } = doc.data()
+          newNotes.push({id: doc.id, title: title, body:body, date:date})
         })
         setNoteCol(newNotes)
       })
@@ -24,26 +25,36 @@ const HomeScreen = () => {
     <View style={styles.container}>
 
       <Text style={styles.title}>My Notes</Text>
-      
-      <Pressable style={styles.btn} onPress={() => navigation.navigate('AddNoteScreen')} >
-        <Text >Go NoteAdd Screen</Text>
-      </Pressable>
-      
+
       <FlatList
-        //style={styles.fl}
-        data={noteCol}
+        data={noteCol.length > 0 ? noteCol : [{id:0,text:""}]}
         renderItem={({ item }) => {
-          return (
-            <View style={ styles.noteView }>
-              <Pressable
-                onPress={() => navigation.navigate('NoteScreen',item)}>
-                <Text style={styles.text} >{item.title}</Text>
-              </Pressable>
-            </View>
-          )
-        }}
+          if (noteCol.length > 0) {
+            return (
+              <View style={styles.noteView}>
+                <Pressable
+                  onPress={() => navigation.navigate('NoteScreen', item)}>
+                  <Text style={styles.text} >{item.title}</Text>
+                </Pressable>
+              </View>
+            )
+          } else { 
+            return (
+              <View style={styles.noteView}>
+                <Text style={styles.empty}>There is no notes, go and create new one</Text>      
+              </View>
+              )
+          }
+      }}
         keyExtractor={(item) => item.id}
       />
+        
+      <TouchableOpacity
+        style={{alignItems:'flex-end', padding:'3%'}}
+        onPress={() => navigation.navigate('AddNoteScreen')} >
+        <Entypo name='plus' size={45} color='#A5D7E8'/>
+      </TouchableOpacity>
+
     </View>
   )
 }
@@ -53,20 +64,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 20
-  },
-  //row: {
-  //  padding: 15,
-  //  marginBottom: 5,
-  //  backgroundColor: 'skyblue',
-  //},
-  btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: '#009FBD',
   },
   title: {
     marginTop: 0,
@@ -87,6 +84,14 @@ const styles = StyleSheet.create({
   noteView: {
     //backgroundColor:'red'
     //!make sure to put the flatlist in container 
+  },
+  empty: {
+    padding: 5,
+    marginBottom: 5,
+    backgroundColor: '#F3E8FF',
+    textAlign:'center'
+    
+    
   },
 
 })
