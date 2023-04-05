@@ -1,9 +1,9 @@
-import { View, Text, Button, FlatList, StyleSheet, Pressable } from 'react-native'
+import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native'
 import React, { useState, useEffect} from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { firebase } from '../config'
+import { firebase } from '../../config'
 
-const Home = () => {
+const HomeScreen = () => {
   const navigation = useNavigation();
   const [noteCol, setNoteCol] = useState([]);
 
@@ -22,16 +22,28 @@ const Home = () => {
   
   return (
     <View style={styles.container}>
-      <Text style={ styles.title }>My Notes</Text>
-      <Pressable style={styles.btn} onPress={() => navigation.navigate('NoteAdd')} >
+
+      <Text style={styles.title}>My Notes</Text>
+      
+      <Pressable style={styles.btn} onPress={() => navigation.navigate('AddNoteScreen')} >
         <Text >Go NoteAdd Screen</Text>
-        </Pressable>
+      </Pressable>
+      
       <FlatList
         //style={styles.fl}
         data={noteCol}
-        renderItem={({ item }) => <Text style={ styles.text } >{item.title}</Text>}
+        renderItem={({ item }) => {
+          return (
+            <View style={ styles.noteView }>
+              <Pressable
+                onPress={() => navigation.navigate('NoteScreen',item)}>
+                <Text style={styles.text} >{item.title}</Text>
+              </Pressable>
+            </View>
+          )
+        }}
         keyExtractor={(item) => item.id}
-    />
+      />
     </View>
   )
 }
@@ -42,11 +54,11 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20
   },
-  row: {
-    padding: 15,
-    marginBottom: 5,
-    backgroundColor: 'skyblue',
-  },
+  //row: {
+  //  padding: 15,
+  //  marginBottom: 5,
+  //  backgroundColor: 'skyblue',
+  //},
   btn: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -71,7 +83,12 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 5,
     backgroundColor: '#F3E8FF',
-  }
+  },
+  noteView: {
+    //backgroundColor:'red'
+    //!make sure to put the flatlist in container 
+  },
+
 })
 
-export default Home
+export default HomeScreen
