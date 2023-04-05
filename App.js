@@ -14,7 +14,6 @@ export default function App() {
       <Stack.Navigator
         initialRouteName='HomeScreen'
         screenOptions={{cardStyle: { backgroundColor: '#454545' }}}>
-        {/* Home Screen is the starting point to navigate */}
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="AddNoteScreen" component={AddNoteScreen} />
         <Stack.Screen name="NoteScreen" component={NoteScreen} />
