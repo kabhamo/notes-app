@@ -4,29 +4,37 @@ import { firebase } from '../../config';
 import { useNavigation } from '@react-navigation/native';
 
 const NoteScreen = ({ route }) => {
-    const navigation = useNavigation();
-    const {id,title,body,date } = route.params
-    const [newTitle, setTitle] = useState(title);
-    const [newBody, setBody] = useState(body);
+  const navigation = useNavigation();
+  const {id,title,body,date } = route.params
+  const [newTitle, setTitle] = useState(title);
+  const [newBody, setBody] = useState(body);
   const [noteDate, setDate] = useState(new Date(date.seconds*1000));
-    const now = new Date();
+  const now = new Date();
 
-    const handleUpdate = () => { 
-        if (newTitle && newTitle.length > 0) {
-            firebase.firestore().collection('notes')
-                .doc(id).update({
-                    title: newTitle,
-                    body: newBody,
-                    date: now,
-                })
-                .then((res) => {
-                    navigation.navigate('HomeScreen')
-                })
-                .catch((ex) => console.log(`Error while updating note ${note.id} , ${ex}`))
-        } else { 
-            Alert.alert("Title can not be empty!")
-        }
-    }
+  const handleUpdate = () => { 
+      if (newTitle && newTitle.length > 0) {
+          firebase.firestore().collection('notes')
+              .doc(id).update({
+                  title: newTitle,
+                  body: newBody,
+                  date: now,
+              })
+              .then((res) => {
+                  navigation.navigate('HomeScreen')
+              })
+              .catch((ex) => console.log(`Error while updating note ${note.id} , ${ex}`))
+      } else { 
+          Alert.alert("Title can not be empty!")
+      }
+  }
+
+  const handleDelete = () => { 
+    firebase.firestore().collection('notes')
+      .doc(id).delete()
+      .then((res) => navigation.navigate('HomeScreen'))
+      .catch((ex) => Alert.alert(`Error while deleting the note, ${ex}`))
+  }
+  
   return (
     <View style={styles.container}>
 
@@ -46,11 +54,19 @@ const NoteScreen = ({ route }) => {
           style={[styles.input, {height:'25%'}]}
       />
 
-      <Text>Date: {noteDate.toISOString()}</Text>
+      <Text style={ styles.date }>Date: {noteDate.toISOString()}</Text>
 
-      <TouchableOpacity style={styles.btn} onPress={handleUpdate}>
-        <Text>Update</Text>
-      </TouchableOpacity>
+      <View style={{flexDirection:'row' , columnGap:'50%', justifyContent:'center'}}>
+        <TouchableOpacity style={styles.btn}
+          onPress={handleUpdate}>
+          <Text>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.btn, { backgroundColor: '#CE5959' }]}
+          onPress={handleDelete}>
+          <Text>Delete</Text>
+        </TouchableOpacity>
+      </View>
+      
 
     </View>
   )
@@ -88,6 +104,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 30,
     fontWeight: 'bold',
+  },
+  date: {
+    padding: 5,
+    marginBottom: 5,
+    backgroundColor: '#F3E8FF',
+    textAlign:'center'
   },
 })
 
