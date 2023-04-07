@@ -34,10 +34,9 @@ const NoteScreen = ({ route }) => {
       .then((res) => navigation.navigate('HomeScreen'))
       .catch((ex) => alert(`Error while deleting the note, ${ex}`))
   }
-  
+
   return (
     <View style={styles.container}>
-
       <Text style={styles.title}>Note Details</Text>
 
       <TextInput
@@ -66,9 +65,8 @@ const NoteScreen = ({ route }) => {
           onPress={handleDelete}>
           <Text>Delete</Text>
         </TouchableOpacity>
-      </View>
       
-
+      </View>
     </View>
   )
 }
