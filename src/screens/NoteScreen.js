@@ -1,6 +1,8 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { firebase } from '../../config';
+import Header from '../components/Header';
+import Input from '../components/Input';
 import { useNavigation } from '@react-navigation/native';
 
 const NoteScreen = ({ route }) => {
@@ -37,21 +39,19 @@ const NoteScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Note Details</Text>
+      <Header title={'Note Details'} />
 
-      <TextInput
-          placeholder='Title'
-          value={newTitle}
-          onChangeText={(text) => setTitle(text)}
-          style={ styles.input }
-      />
-      <TextInput
-          placeholder='Body'
-          value={newBody}
-          multiline
-          onChangeText={(text) => setBody(text)}
-          style={[styles.input, {height:'25%'}]}
-      />
+      <Input
+        placeholder='Title'
+        value={newTitle}
+        onChangeText={(text) => setTitle(text)}/>
+      
+      <Input
+        styleInput={{height:'25%'}}
+        placeholder='Body'
+        value={newBody}
+        multiline
+        onChangeText={(text) => setBody(text)}/>
 
       <Text style={styles.date}>Date: {noteDate.toISOString()}</Text>
       <Text style={styles.date}>{`coordinates - long: ${coordinates.longitude} lat: ${coordinates.latitude}`}</Text>

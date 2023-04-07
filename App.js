@@ -14,11 +14,11 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName='LoginScreen'
-        screenOptions={{ cardStyle: { backgroundColor: '#454545' } }}>
+        screenOptions={{ cardStyle: { backgroundColor: '#FFF3E2' } }}>
         <Stack.Screen name="LoginScreen" options={{headerShown: false}} component={LoginScreen} />
         <Stack.Screen name="HomeScreen" options={{headerShown: false}} component={HomeScreen} />
-        <Stack.Screen name="AddNoteScreen" component={AddNoteScreen} />
-        <Stack.Screen name="NoteScreen" component={NoteScreen} />
+        <Stack.Screen name="AddNoteScreen" options={{headerShown: false}} component={AddNoteScreen} />
+        <Stack.Screen name="NoteScreen" options={{headerShown: false}} component={NoteScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

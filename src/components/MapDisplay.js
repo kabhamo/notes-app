@@ -33,7 +33,7 @@ const MapDisplay = ({data, coordinates}) => {
                     data.map((item) => { 
                     return (
                         <Marker
-                            key={`key_${coordinates.longitude}_${coordinates.latitude}`}
+                            key={`key_${coordinates.longitude}_${coordinates.latitude}_${item.id}`}
                             coordinate={{ latitude: coordinates.latitude, longitude: coordinates.longitude, }}
                             onCalloutPress={() => navigation.navigate('NoteScreen', item)}
                             title={item ? item.title : 'Title'}

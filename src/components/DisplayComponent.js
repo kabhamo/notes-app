@@ -8,8 +8,8 @@ const DisplayMode = ({ toggleMode, handleMapMode }) => {
         <ToggleSwitch
             isOn={toggleMode}
             onColor="#54B435" //map
-            offColor="#E74646" //list
-              label={ toggleMode ? "Go List mode" : "Go Map mode"}
+            offColor="#B2A4FF" //list
+            label={ toggleMode ? "Go List mode" : "Go Map mode"}
             labelStyle={{ color: "#FA9884", fontWeight: "900" }}
             size="medium"
             onToggle={isOn => handleMapMode(isOn)}

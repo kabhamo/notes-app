@@ -1,14 +1,17 @@
 import {
-  View, Text, TextInput, StyleSheet, Keyboard, TouchableWithoutFeedback,
+  View, Text, SafeAreaView, ScrollView, StyleSheet,
+  Keyboard, TouchableWithoutFeedback,
   TouchableOpacity, Platform, KeyboardAvoidingView
 } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../../config'
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useLocation from '../services/useLocation';
 import * as ImagePicker from 'expo-image-picker';
 import ImageLoad from 'react-native-image-placeholder';
+import Input from '../components/Input';
+import Button from '../components/Button'
+import Header from '../components/Header';
 
 const AddNoteScreen = () => {
   const navigation = useNavigation();
@@ -47,94 +50,78 @@ const AddNoteScreen = () => {
     }
   };
 
-
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
+    <SafeAreaView style={styles.container}>
+      <ScrollView >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       
-      <View style={ styles.container }>
-      
-        <Text style={styles.title}>New Note</Text>
+            <View style={ styles.container }>
+    
+              <Header title={'New Note'}/>
+              <Input
+                placeholder='Title'
+                value={title}
+                onChangeText={(text) => setTitle(text)}/>
+            
+              <Input
+                styleInput={{height:'30%'}}
+                placeholder='Body'
+                value={body}
+                multiline
+                onChangeText={(text) => setBody(text)}/>
+            
+              <TouchableOpacity
+                  style={styles.imageContainer}
+                  onPress={pickImageAsync} >
+                    <ImageLoad
+                    style={styles.image}
+                    loadingStyle={{ size: 'large', color: 'blue' }}
+                    isShowActivity={false}
+                    placeholderSource={require('../../assets/add-photo-icon-on-white-260nw-221329180.webp')}
+                    placeholderStyle={styles.placeholderStyle}
+                    source={{ uri: selectedImage}}
+                  />
+              </TouchableOpacity>
 
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={'#A5D7E8'}
-          placeholder='Title'
-          value={title}
-          onChangeText={(text) => setTitle(text)} />
-        <TextInput
-          style={[styles.input, {height:'25%'}]}
-          placeholderTextColor={'#A5D7E8'}
-          placeholder='Body'
-          value={body}
-          multiline
-          onChangeText={(text) => setBody(text)} />
-        
-        <TouchableOpacity
-            style={{alignItems:'flex-end', padding:'3%'}}
-            onPress={pickImageAsync} >
-              <ImageLoad
-              style={{ width: 320, height: 200, alignSelf:'center' }}
-              loadingStyle={{ size: 'large', color: 'blue' }}
-              isShowActivity={false}
-              placeholderSource={require('../../assets/add-photo-icon-on-white-260nw-221329180.webp')}
-              placeholderStyle={{ width: 320, height: 200, alignSelf:'center' }}
-              source={{ uri: selectedImage}}
-            />
-        </TouchableOpacity>
-        
-
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={handleAdd}>
-          <Text>Save</Text>
-        </TouchableOpacity>
-
-        </View>
-        </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+              <View style={{flexDirection:'row', justifyContent:'center'}}>
+                <Button styleButton={{width:'50%'}} title={'Save'} onPress={handleAdd} />
+                <Button styleButton={{backgroundColor:'#FA9884'}} title={'Cancele'} onPress={() => navigation.navigate('HomeScreen')} />
+              </View>
+              
+              </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 20
+    gap: '8%',
   },
-  input: {
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderColor: '#009FBD',
-    borderWidth:1,
-    width: '100%',
-    height:'8%'
-  },
-  btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: '#009FBD',
-  },
-  title: {
-    marginTop: 0,
-    paddingVertical: 5,
-    borderWidth: 1,
-    borderColor: '#20232a',
-    backgroundColor: '#0B2447',
-    color: '#A5D7E8',
-    textAlign: 'center',
-    fontSize: 30,
-    fontWeight: 'bold',
+  imageContainer: {
+    width: '90%',
+    height: '70%',
+    margin: 8,
+    borderWidth: 3,
+    borderRadius: 5,
+    borderColor: "#6c63ff",
+    alignItems: 'flex-end',
+    padding: '3%'
   },
   image: {
-    width: '70%',
-    height: '30%',
-    alignSelf:'center'
+    width: '100%',
+    height: '100%',
+    alignSelf: 'center' 
+  },
+  placeholderStyle: {
+    width: '100%',
+    height: '100%',
+    alignSelf: 'center' 
   },
 })
 

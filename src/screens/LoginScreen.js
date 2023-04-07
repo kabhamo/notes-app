@@ -1,14 +1,15 @@
-import { View, KeyboardAvoidingView,Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, KeyboardAvoidingView,Image, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { auth } from '../../config';
 import { useNavigation } from '@react-navigation/native';
 import { storeData, getData } from '../services/asyncStorage';
+import Button from '../components/Button'
+import Input from '../components/Input'
 const KEEPLOGGEDIN = '@keepLoggedIn';
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    //const [loading, setloading] = useState(true)
     const navigation = useNavigation();
     
     const handleSignUp = () => { 
@@ -47,39 +48,37 @@ const LoginScreen = () => {
   return (
       <KeyboardAvoidingView
           style={ styles.container }
-          behavior="padding"
-      >
-        <View style={styles.inputContainer}>
-            <TextInput
-                style={styles.input}
+          behavior="padding">
+          
+          <Image
+            source={require('../../assets/loginImage.png')}
+            style={{
+                height: "40%",
+                marginTop: "3%",
+                resizeMode: "contain",
+            }}/>
+          <View style={styles.inputContainer}>
+
+            <Input
                 placeholderTextColor={'#A5D7E8'}
                 placeholder='Email'
                 value={email}
-                  onChangeText={(text) => setEmail(text)} />
-              <TextInput
-                style={styles.input}
-                placeholderTextColor={'#A5D7E8'}
+                onChangeText={(text) => setEmail(text)} />
+            
+            <Input
                 placeholder='Password'
-                secureTextEntry
+                secure={true}
+                type={'password'}
                 value={password}
-                  onChangeText={(text) => setPassword(text)}
-              />
+                onChangeText={(text) => setPassword(text)} />
+              
           </View>
-          <View style={styles.btnContainer}>
-            <TouchableOpacity
-                onPress={handleLogin}
-                style={styles.btn}
-            >
-                <Text style={styles.btnText}>Login</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity
-                onPress={handleSignUp}
-                style={[styles.btn, styles.btnOutline]}
-            >
-                <Text style={styles.btnOutlineText}>Register</Text>
-            </TouchableOpacity>
+          <View style={styles.btnContainer}>
+            <Button styleButton={styles.LoginBtn} title={'Login'} onPress={handleLogin} />
+            <Button styleButton={styles.registerBtn} styleText={{color:'#6c63ff'}} title={'Register'} onPress={handleSignUp} />
           </View>
+
         </KeyboardAvoidingView>
     )
 }
@@ -90,44 +89,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems:'center',
     },
-    inputContainer: {
-        width: '80%'
-    },
-    input: {
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderRadius: 10,
-        marginTop: 5,
-    },
     btnContainer: {
         width: '60%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 40,
+        marginTop: '5%',
     },
-    btn: {
-        backgroundColor: '#0782F9',
-        width: '100%',
-        padding: 15,
-        borderRadius: 10,
+    inputContainer: {
+        width: '80%',
+        justifyContent: 'center',
         alignItems: 'center',
+        marginTop: '5%',
     },
-    btnOutline: {
-        backgroundColor: 'white',
-        marginTop: 5,
-        borderColor: '#0782F9',
+    registerBtn: {
+        backgroundColor: '#FFF3E2',
         borderWidth: 2,
+        borderColor: "#6c63ff",
+        width: '100%',
     },
-    btnText: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-    btnOutlineText: {
-        color: '#0782F9',
-        fontWeight: '700',
-        fontSize: 16,
+    LoginBtn: {
+        width: '100%',
     },
 });
 
