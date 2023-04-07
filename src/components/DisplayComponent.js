@@ -3,7 +3,6 @@ import React from 'react'
 import ToggleSwitch from 'toggle-switch-react-native'
 
 const DisplayMode = ({ toggleMode, handleMapMode }) => {
-    console.log("toggleMode", toggleMode)
   return (
     <View>
         <ToggleSwitch

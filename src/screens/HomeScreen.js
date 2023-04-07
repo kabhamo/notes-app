@@ -7,6 +7,7 @@ import { firebase, auth } from '../../config';
 import { Entypo } from '@expo/vector-icons';
 import { storeData } from '../services/asyncStorage';
 import useLocation from '../services/useLocation';
+
 const KEEPLOGGEDIN = '@keepLoggedIn';
 
 const HomeScreen = () => {
@@ -41,10 +42,12 @@ const HomeScreen = () => {
   const handleMapMode = (isOne) => { 
     setToggleMode(isOne)
   }
+
   return (
     <View style={styles.container}>
 
       <Text style={styles.title}>My Notes</Text>
+      
       {/* Here will be the render condithion for list/map mode  */}
       <DisplayMode toggleMode={toggleMode} handleMapMode={handleMapMode} />
       {toggleMode ?

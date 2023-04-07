@@ -1,26 +1,11 @@
-import { View, Text,StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View,StyleSheet } from 'react-native'
+import React from 'react'
 import MapView, { Marker } from 'react-native-maps';
-//import useLocation from '../services/useLocation';
 import { useNavigation } from '@react-navigation/native';
 
 const MapDisplay = ({data, coordinates}) => {
-    //const [coordinates] = useLocation();
     const navigation = useNavigation();
-    const [myCords, setMyCords] = useState(coordinates)
-    const [markers, setMarkers] = useState(null)
-    
-    console.log("data:", data)
-    //useEffect(() => {
-    //    (() => { 
-    //        setMyCords({
-    //            latitude: coordinates?.latitude,
-    //            longitude: coordinates?.longitude,
-    //            latitudeDelta: 0.0922,
-    //            longitudeDelta: 0.0421,
-    //        })
-    //    })();
-    //}, [coordinates])
+   
     const currentCords = {
         latitude: coordinates.latitude,
         longitude: coordinates.longitude,
@@ -36,7 +21,6 @@ const MapDisplay = ({data, coordinates}) => {
     }
   return (
       <View style={styles.container}>
-          {/*{coordinates ? <Text>{coordinates}</Text> : <Text>asd</Text>}*/}
           <View style={styles.mapContainer}>
             <MapView
                   style={styles.map}
