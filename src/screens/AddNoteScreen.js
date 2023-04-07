@@ -1,4 +1,4 @@
-import { View, Text, Keyboard, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, Keyboard, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../../config'
@@ -21,7 +21,7 @@ const AddNoteScreen = () => {
       })
       .catch((ex) => console.log(`Error saving data, ${ex}`))//alert
     } else {
-      Alert.alert("Title can not be empty!")
+      alert("Title can not be empty!")
     }
   }
   return (

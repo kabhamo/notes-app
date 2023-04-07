@@ -9,11 +9,13 @@ const firebaseConfig = {
     storageBucket: "moveo-123.appspot.com",
     messagingSenderId: "674252260212",
     appId: "1:674252260212:web:9af316f06af417125f6221",
-    measurementId: "G-N8NPXWRT39"
+    measurementId: "G-N8NPXWRT39",
 };
   
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-export { firebase };
+const auth = firebase.auth();
+
+export { firebase, auth };

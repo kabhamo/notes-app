@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { firebase } from '../../config';
 import { useNavigation } from '@react-navigation/native';
@@ -24,7 +24,7 @@ const NoteScreen = ({ route }) => {
               })
               .catch((ex) => console.log(`Error while updating note ${note.id} , ${ex}`))
       } else { 
-          Alert.alert("Title can not be empty!")
+          alert("Title can not be empty!")
       }
   }
 
@@ -32,7 +32,7 @@ const NoteScreen = ({ route }) => {
     firebase.firestore().collection('notes')
       .doc(id).delete()
       .then((res) => navigation.navigate('HomeScreen'))
-      .catch((ex) => Alert.alert(`Error while deleting the note, ${ex}`))
+      .catch((ex) => alert(`Error while deleting the note, ${ex}`))
   }
   
   return (

@@ -1,13 +1,16 @@
 import { View, Text, FlatList, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { firebase } from '../../config';
+import { firebase, auth } from '../../config';
 import { Entypo } from '@expo/vector-icons';
+import { storeData } from '../asyncStorage';
+const KEEPLOGGEDIN = '@keepLoggedIn';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [noteCol, setNoteCol] = useState([]);
-
+  //const userCredentials = auth().currentUser;
+  
   //fetch datta from firebase
   useEffect(() => {
     firebase.firestore().collection('notes')
@@ -20,6 +23,16 @@ const HomeScreen = () => {
         setNoteCol(newNotes)
       })
   }, [])
+
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(async () => {
+        await storeData(KEEPLOGGEDIN, false)
+        navigation.replace("LoginScreen")
+      })
+      .catch(error => alert(error.message))
+  }
   
   return (
     <View style={styles.container}>
@@ -48,12 +61,19 @@ const HomeScreen = () => {
       }}
         keyExtractor={(item) => item.id}
       />
-        
-      <TouchableOpacity
-        style={{alignItems:'flex-end', padding:'3%'}}
-        onPress={() => navigation.navigate('AddNoteScreen')} >
-        <Entypo name='plus' size={45} color='#A5D7E8'/>
-      </TouchableOpacity>
+      <View style={styles.btns}>
+        <TouchableOpacity
+          style={{alignItems:'flex-end', padding:'3%'}}
+          onPress={handleSignOut} >
+          <Entypo name='back' size={45} color='#A5D7E8'/>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{alignItems:'flex-end', padding:'3%'}}
+          onPress={() => navigation.navigate('AddNoteScreen')} >
+          <Entypo name='plus' size={45} color='#A5D7E8'/>
+        </TouchableOpacity>
+      </View>
 
     </View>
   )
@@ -90,8 +110,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     backgroundColor: '#F3E8FF',
     textAlign:'center'
-    
-    
+  },
+  btns: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    columnGap:'190%'
   },
 
 })
