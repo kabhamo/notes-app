@@ -2,9 +2,11 @@ import { View, Text, Keyboard, TextInput, StyleSheet, TouchableOpacity } from 'r
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../../config'
+import useLocation from '../services/useLocation';
 
 const AddNoteScreen = () => {
   const navigation = useNavigation();
+  const [coordinates] = useLocation()
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const now = new Date();
@@ -12,7 +14,7 @@ const AddNoteScreen = () => {
   const handleAdd = () => { 
     if (title && title.length > 0) { 
       firebase.firestore().collection('notes')
-      .add({ title: title, body: body, date: now })
+      .add({ title: title, body: body, date: now, coordinates:coordinates })
       .then((res) => { 
         setTitle('')
         setBody('')
