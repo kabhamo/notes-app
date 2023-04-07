@@ -1,15 +1,19 @@
 import { View, Text, FlatList, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import DisplayMode from '../components/DisplayComponent';
+import MapDisplay from '../components/MapDisplay';
 import { useNavigation } from '@react-navigation/native';
 import { firebase, auth } from '../../config';
 import { Entypo } from '@expo/vector-icons';
-import { storeData } from '../asyncStorage';
+import { storeData } from '../services/asyncStorage';
+import useLocation from '../services/useLocation';
 const KEEPLOGGEDIN = '@keepLoggedIn';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [coordinates] = useLocation()
   const [noteCol, setNoteCol] = useState([]);
-  //const userCredentials = auth().currentUser;
+  const [toggleMode, setToggleMode] = useState(false); //listMode is default
   
   //fetch datta from firebase
   useEffect(() => {
@@ -17,8 +21,8 @@ const HomeScreen = () => {
       .onSnapshot((querySnapshot) => { 
         const newNotes = [];
         querySnapshot.forEach((doc) => { 
-          const { title, body, date } = doc.data()
-          newNotes.push({id: doc.id, title: title, body:body, date:date})
+          const { title, body, date, coordinates } = doc.data()
+          newNotes.push({ id: doc.id, title: title, body: body, date: date, coordinates: coordinates})
         })
         setNoteCol(newNotes)
       })
@@ -34,12 +38,19 @@ const HomeScreen = () => {
       .catch(error => alert(error.message))
   }
   
+  const handleMapMode = (isOne) => { 
+    setToggleMode(isOne)
+  }
   return (
     <View style={styles.container}>
 
       <Text style={styles.title}>My Notes</Text>
-
-      <FlatList
+      {/* Here will be the render condithion for list/map mode  */}
+      <DisplayMode toggleMode={toggleMode} handleMapMode={handleMapMode} />
+      {toggleMode ?
+        <MapDisplay data={noteCol} coordinates={coordinates} />
+        :
+        <FlatList
         data={noteCol.length > 0 ? noteCol : [{id:0,text:""}]}
         renderItem={({ item }) => {
           if (noteCol.length > 0) {
@@ -60,7 +71,7 @@ const HomeScreen = () => {
           }
       }}
         keyExtractor={(item) => item.id}
-      />
+      />}
       <View style={styles.btns}>
         <TouchableOpacity
           style={{alignItems:'flex-end', padding:'3%'}}

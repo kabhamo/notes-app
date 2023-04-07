@@ -2,7 +2,7 @@ import { View, KeyboardAvoidingView,Text, StyleSheet, TextInput, TouchableOpacit
 import React, { useEffect, useState } from 'react';
 import { auth } from '../../config';
 import { useNavigation } from '@react-navigation/native';
-import { storeData, getData } from '../asyncStorage';
+import { storeData, getData } from '../services/asyncStorage';
 const KEEPLOGGEDIN = '@keepLoggedIn';
 
 const LoginScreen = () => {

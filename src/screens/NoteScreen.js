@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const NoteScreen = ({ route }) => {
   const navigation = useNavigation();
-  const {id,title,body,date } = route.params
+  const {id,title,body,date, coordinates } = route.params
   const [newTitle, setTitle] = useState(title);
   const [newBody, setBody] = useState(body);
   const [noteDate, setDate] = useState(new Date(date.seconds*1000));
@@ -54,7 +54,8 @@ const NoteScreen = ({ route }) => {
           style={[styles.input, {height:'25%'}]}
       />
 
-      <Text style={ styles.date }>Date: {noteDate.toISOString()}</Text>
+      <Text style={styles.date}>Date: {noteDate.toISOString()}</Text>
+      <Text style={styles.date}>{`coordinates - long: ${coordinates.longitude} lat: ${coordinates.latitude}`}</Text>
 
       <View style={{flexDirection:'row' , columnGap:'50%', justifyContent:'center'}}>
         <TouchableOpacity style={styles.btn}
