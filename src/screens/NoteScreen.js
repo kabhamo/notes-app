@@ -56,7 +56,7 @@ const NoteScreen = ({ route }) => {
   const uploadImageHandler = async () => { 
     const result = await pickImageAsync();
     if (result) {
-      setSelectedImageData(result.assets[0].uri);
+      setSelectedImageData(result);
     }
   }
 
