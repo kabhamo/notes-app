@@ -15,7 +15,7 @@
 - `cd notes-app`
 - make sure that the phone and the computer are connected to the same **wifi** (in case you are using physical device)
 - `npm install`
-- `npm run start`
+- `npm run start` or `npm run tunnel`
 - Scan the QR code above with Expo Go (Android) or the Camera app (iOS)
 - Or run `i` to open ios simulator / `a` android emulator. 
 
