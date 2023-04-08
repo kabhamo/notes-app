@@ -15,8 +15,9 @@
 
 # Tech
 - React Native, Javascript
-- Expo
-- 
+- Expo (MapView, ExpoLocation, ImagePicker)
+- AsyncStorage
+- Firebase
 
 # Media
 <img src="assets/readmeAssets/IOS-HomeScreen.png" width="200" height="400" ><img src="assets/readmeAssets/Android-HomeScreen.png" width="200" height="400" >
