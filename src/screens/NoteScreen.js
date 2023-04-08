@@ -83,7 +83,8 @@ const NoteScreen = ({ route }) => {
             <ImageLoad
             style={styles.image}
             loadingStyle={{ size: 'large', color: 'blue' }}
-            isShowActivity={false}
+            isShowActivity={true}
+            placeholderStyle={styles.placeholderStyle}
             source={{ uri: selectedImageUri}}
           />
         </TouchableOpacity>
@@ -157,6 +158,11 @@ const styles = StyleSheet.create({
   deleteBtn: {
     backgroundColor: '#CE5959',
     width: windowWidth*0.3
+  },
+  placeholderStyle: {
+    width: '100%',
+    height: '100%',
+    alignSelf: 'center',
   },
 })
 
