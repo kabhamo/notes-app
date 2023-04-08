@@ -36,14 +36,14 @@ const HomeScreen = () => {
       .onSnapshot((querySnapshot) => { 
         const newNotes = [];
         querySnapshot.forEach((doc) => { 
-          const { title, body, date, coordinates, imageUri } = doc.data()
+          const { title, body, date, coordinates, imageData } = doc.data()
           newNotes.push({
             id: doc.id,
             title: title,
             body: body,
             date: date,
             coordinates: coordinates,
-            imageUri: imageUri
+            imageData: imageData
           })
         })
         newNotes.sort(function (a, b) {

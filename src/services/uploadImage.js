@@ -23,7 +23,10 @@ export async function pickImageAsync() {
   await uploadImageAsBlob(blob);
   //download as url so can be shared
   const url = await downloadImage(blob._data.name);
-  return url;
+  const imageData = { url: "", path: `NotesImages/` }
+  imageData.url = url;
+  imageData.path = `NotesImages/${blob._data.name}`;
+  return imageData;
 };
 
 

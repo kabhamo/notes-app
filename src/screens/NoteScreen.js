@@ -8,17 +8,18 @@ import NoteCard from '../components/NoteCard';
 import { useNavigation } from '@react-navigation/native';
 import { pickImageAsync } from '../services/uploadImage';
 import ImageLoad from 'react-native-image-placeholder';
+import { getStorage, ref, deleteObject } from "firebase/storage";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const NoteScreen = ({ route }) => {
   const navigation = useNavigation();
-  const {id,title,body,date, coordinates, imageUri } = route.params
+  const {id,title,body,date, imageData } = route.params
   const [newTitle, setTitle] = useState(title);
   const [newBody, setBody] = useState(body);
   const [noteDate, setDate] = useState(new Date(date.seconds * 1000));
-  const [selectedImageUri, setSelectedImageUri] = useState(imageUri);
+  const [selectedImageData, setSelectedImageData] = useState(imageData);
   const now = new Date();
 
   const handleUpdate = () => { 
@@ -28,7 +29,7 @@ const NoteScreen = ({ route }) => {
                   title: newTitle,
                   body: newBody,
                   date: now,
-                  imageUri: selectedImageUri
+                  imageData: selectedImageData
               })
               .then((res) => {
                   navigation.navigate('HomeScreen')
@@ -39,7 +40,13 @@ const NoteScreen = ({ route }) => {
       }
   }
 
-  const handleDelete = () => { 
+  const handleDelete = () => {
+    const storage = getStorage();
+    const toDeleteImageRef = ref(storage, imageData?.path)
+    deleteObject(toDeleteImageRef)
+      .then(() => console.log('File deleted successfully'))
+      .catch((ex) => alert(`Error while deleting the image, ${ex}`))
+    
     firebase.firestore().collection('notes')
       .doc(id).delete()
       .then((res) => navigation.navigate('HomeScreen'))
@@ -49,7 +56,7 @@ const NoteScreen = ({ route }) => {
   const uploadImageHandler = async () => { 
     const result = await pickImageAsync();
     if (result) {
-      setSelectedImageUri(result.assets[0].uri);
+      setSelectedImageData(result.assets[0].uri);
     }
   }
 
@@ -76,7 +83,7 @@ const NoteScreen = ({ route }) => {
           multiline
           onChangeText={(text) => setBody(text)}/>
 
-        {imageUri ?
+        {imageData ?
          <TouchableOpacity
           style={styles.imageContainer}
           onPress={uploadImageHandler} >
@@ -85,7 +92,7 @@ const NoteScreen = ({ route }) => {
             loadingStyle={{ size: 'large', color: 'blue' }}
             isShowActivity={true}
             placeholderStyle={styles.placeholderStyle}
-            source={{ uri: selectedImageUri}}
+            source={{ uri: selectedImageData.url}}
           />
         </TouchableOpacity>
           :

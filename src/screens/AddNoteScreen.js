@@ -20,7 +20,7 @@ const windowHeight = Dimensions.get('window').height;
 const AddNoteScreen = () => {
   const navigation = useNavigation();
   const [coordinates] = useLocation();
-  const [selectedImageUri, setSelectedImageUri] = useState(null);
+  const [selectedImageData, setSelectedImageData] = useState(null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const now = new Date();
@@ -30,12 +30,12 @@ const AddNoteScreen = () => {
       firebase.firestore().collection('notes')
         .add({
           title: title, body: body, date: now, coordinates: coordinates,
-          imageUri: selectedImageUri
+          imageData: selectedImageData
         })
       .then((res) => { 
         setTitle('')
         setBody('')
-        setSelectedImageUri(null)
+        setSelectedImageData(null)
         Keyboard.dismiss();
         navigation.navigate('HomeScreen')
       })
@@ -46,10 +46,10 @@ const AddNoteScreen = () => {
   }
 
   const uploadImageHandler = async () => { 
-    const url = await pickImageAsync();
-    console.log("uploadImageHandler: ", url)
-    if (url) {
-      setSelectedImageUri(url);
+    const imageData = await pickImageAsync();
+    //console.log("uploadImageHandler: ", url)
+    if (imageData) {
+      setSelectedImageData(imageData);
     }
   }
 
@@ -88,7 +88,7 @@ const AddNoteScreen = () => {
                     isShowActivity={false}
                     placeholderSource={require('../../assets/add-photo-icon-on-white-260nw-221329180.webp')}
                     placeholderStyle={styles.placeholderStyle}
-                    source={{ uri: selectedImageUri}}
+                    source={{ uri: selectedImageData?.url}}
                   />
               </TouchableOpacity>
 
