@@ -1,14 +1,12 @@
-import { View,StyleSheet, Dimensions, Platform } from 'react-native'
+import { View,StyleSheet } from 'react-native'
 import React from 'react'
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 const MapDisplay = ({data, coordinates}) => {
     const navigation = useNavigation();
-   
+    
     const currentCords = {
         latitude: coordinates.latitude,
         longitude: coordinates.longitude,
@@ -24,16 +22,15 @@ const MapDisplay = ({data, coordinates}) => {
     }
   return (
       <View style={styles.container}>
-          <View style={styles.mapContainer}>
-            <MapView
-                  style={styles.map}
-                  initialRegion={haifaCords}
-                  region={currentCords}
-                  showsUserLocation={true}
-                  onUserLocationChange={() => { }}
-              >
-                  {data.length > 0 ?
-                      data.map((item) => { 
+        <MapView
+            style={styles.map}
+            initialRegion={haifaCords}
+            region={currentCords}
+            showsUserLocation={true}
+            onUserLocationChange={() => { }}
+            >
+            {data.length > 0 ?
+                data.map((item) => { 
                     return (
                         <Marker
                             key={`key_${coordinates.longitude}_${coordinates.latitude}_${item.id}`}
@@ -42,11 +39,10 @@ const MapDisplay = ({data, coordinates}) => {
                             title={item ? item.title : 'Title'}
                         />
                     );
-                    })
-                      :
-                    null}
-            </MapView>
-          </View>
+                })
+            :
+            null}
+        </MapView>
     </View>
   )
 }
@@ -54,21 +50,16 @@ const MapDisplay = ({data, coordinates}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    map: {
-        width: Platform.OS === 'ios' ? windowWidth*0.99 : windowWidth*0.98,
-        height: Platform.OS === 'ios' ? windowHeight * 0.67 : windowHeight*0.77,
-        borderRadius: 5,
-    },
-    mapContainer: {
-        flex: 1,
         justifyContent: 'center',
-        alignItems:'center',
-        width: windowWidth,
-        height: windowHeight,
+        alignItems: 'center',
         borderWidth: 3,
         borderRadius: 5,
         borderColor: "#6c63ff",
+    },
+    map: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 5,
     },
 });
   

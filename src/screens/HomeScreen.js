@@ -145,7 +145,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 15
+    gap: 15,
   },
   title: {
     marginTop: 0,
