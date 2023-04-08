@@ -25,10 +25,14 @@ const AddNoteScreen = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const now = new Date();
+
   const handleAdd = () => { 
     if (title && title.length > 0) { 
       firebase.firestore().collection('notes')
-      .add({ title: title, body: body, date: now, coordinates:coordinates, imageUri: selectedImageUri})
+        .add({
+          title: title, body: body, date: now, coordinates: coordinates,
+          imageUri: selectedImageUri
+        })
       .then((res) => { 
         setTitle('')
         setBody('')
@@ -60,29 +64,10 @@ const AddNoteScreen = () => {
       xhr.open("GET", uri, true); // fetch the blob from uri in async mode
       xhr.send(null);  // no initial data
     });
-
     const fileRef = firebase.database().ref().child('imageUri')
     const snapshot = fileRef.set(blob) //Add the blob to database
       .then((res) => console.log("snapshot adding result: ", res))
-      .catch((ex)=>console.log("Error while adding to database: ", ex))
-    snapshot.on(firebase.storage.TaskEvent.STATE_CHANGED,
-      () => { 
-        //setUploading(true)
-      }, (error) => { 
-        //setUploading(false)
-        console.log("Error snapshot: ", error)
-        blob.close()
-        return
-    },
-      () => { 
-        snapshot.snapshot.ref.getDownloadURL().then((url) => { 
-          //setUploading(false)
-          console.log("Download URL: ", url)
-          setSelectedImageUri(url)
-          blob.close()
-          return url
-        })
-      })
+      .catch((ex) => console.log("Error while adding to database: ", ex))
   }
 
   const pickImageAsync = async () => {
@@ -98,7 +83,8 @@ const AddNoteScreen = () => {
     });
     if (!result.canceled) {
       setSelectedImageUri(result.assets[0].uri);
-      const uploadUrl = await uploadImageAsync(result.assets[0].uri);
+      console.log("Download URL: ", result.assets[0].uri)
+      //const uploadUrl = await uploadImageAsync(result.assets[0].uri);
     } else {
       alert('You did not select any image.');
     }

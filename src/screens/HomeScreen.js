@@ -4,7 +4,7 @@ import DisplayMode from '../components/DisplayComponent';
 import MapDisplay from '../components/MapDisplay';
 import { useNavigation } from '@react-navigation/native';
 import { firebase, auth } from '../../config';
-import { Entypo } from '@expo/vector-icons';
+import { Octicons, Entypo } from '@expo/vector-icons';
 import { storeData } from '../services/asyncStorage';
 import useLocation from '../services/useLocation';
 import NoteCard from '../components/NoteCard';
@@ -17,6 +17,14 @@ const HomeScreen = () => {
   const [coordinates] = useLocation()
   const [noteCol, setNoteCol] = useState([]);
   const [toggleMode, setToggleMode] = useState(false); //listMode is default
+  
+  useEffect(() => { 
+    navigation.addListener('beforeRemove', (e) => { 
+      // Prevent default behavior of leaving the screen
+      //we want to sign out only using the button
+      e.preventDefault();
+    })
+  }, [])
   
   //fetch datta from firebase
   useEffect(() => {
@@ -34,6 +42,11 @@ const HomeScreen = () => {
             imageUri: imageUri
           })
         })
+        newNotes.sort(function (a, b) {
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(b.date.seconds*1000) - new Date(a.date.seconds*1000);
+        });
         setNoteCol(newNotes)
       })
   }, [])
@@ -89,13 +102,14 @@ const HomeScreen = () => {
         <TouchableOpacity
           style={{alignItems:'flex-end', padding:'3%'}}
           onPress={handleSignOut} >
-          <Entypo name='back' size={45} color='#6c63ff'/>
+          <Octicons name="sign-in" size={45} color='#6c63ff' />
+          {/*<Entypo name='back' size={45} color='#6c63ff'/>*/}
         </TouchableOpacity>
 
         <TouchableOpacity
           style={{alignItems:'flex-end', padding:'3%'}}
           onPress={() => navigation.navigate('AddNoteScreen')} >
-          <Entypo name='plus' size={45} color='#6c63ff'/>
+          <Entypo name='add-to-list' size={45} color='#6c63ff'/>
         </TouchableOpacity>
       </View>
 
@@ -107,7 +121,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 20
+    gap: 15
   },
   title: {
     marginTop: 0,
@@ -125,10 +139,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     backgroundColor: '#F3E8FF',
   },
-  noteView: {
-    //backgroundColor:'red'
-    //!make sure to put the flatlist in container 
-  },
   empty: {
     padding: 5,
     marginBottom: 5,
@@ -137,8 +147,7 @@ const styles = StyleSheet.create({
   },
   btns: {
     flexDirection: 'row',
-    alignSelf: 'center',
-    //columnGap:'190%'
+    justifyContent:'space-between'
   },
 
 })

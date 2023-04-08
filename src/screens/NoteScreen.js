@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, KeyboardAvoidingView, SafeAreaView, Dimensions } from 'react-native'
+import { View, Image, StyleSheet, KeyboardAvoidingView, SafeAreaView, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import { firebase } from '../../config';
 import Header from '../components/Header';
