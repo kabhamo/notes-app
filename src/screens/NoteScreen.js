@@ -41,16 +41,20 @@ const NoteScreen = ({ route }) => {
   }
 
   const handleDelete = () => {
-    const storage = getStorage();
-    const toDeleteImageRef = ref(storage, imageData?.path)
-    deleteObject(toDeleteImageRef)
-      .then(() => console.log('File deleted successfully'))
-      .catch((ex) => alert(`Error while deleting the image, ${ex}`))
-    
-    firebase.firestore().collection('notes')
+    try {
+      if (imageData) { 
+        const storage = getStorage();
+        const toDeleteImageRef = ref(storage, imageData?.path)
+          deleteObject(toDeleteImageRef)
+          .then(() => console.log('File deleted successfully'))
+      }
+      firebase.firestore().collection('notes')
       .doc(id).delete()
-      .then((res) => navigation.navigate('HomeScreen'))
-      .catch((ex) => alert(`Error while deleting the note, ${ex}`))
+        .then((res) => navigation.navigate('HomeScreen'))
+    } catch (ex) { 
+      alert(`Error while deleting the note, ${ex}`)
+    }
+    
   }
 
   const uploadImageHandler = async () => { 
