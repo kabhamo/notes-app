@@ -12,10 +12,6 @@ const LoginScreen = () => {
     const [password, setPassword] = useState('')
     const navigation = useNavigation();
 
-    useEffect(() => { 
-        navigation.addListener('beforeRemove',(e) => console.log(e))
-    },[])
-    
     const handleSignUp = () => { 
         auth.createUserWithEmailAndPassword(email, password)
             .then(async (userCredentials) => {
