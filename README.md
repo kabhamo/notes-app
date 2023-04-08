@@ -19,4 +19,5 @@
 - 
 
 # Media
-
+<img src="asset/add-photo-icon-on-white-260nw-221329180.webp" width="300" height="600" >
+![alt text](https://github.com/kabhamo/notes-app/blob/main/assets/add-photo-icon-on-white-260nw-221329180.webp?raw=true)
