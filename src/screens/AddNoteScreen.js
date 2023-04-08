@@ -46,9 +46,10 @@ const AddNoteScreen = () => {
   }
 
   const uploadImageHandler = async () => { 
-    const result = await pickImageAsync();
-    if (result) {
-      setSelectedImageUri(result.assets[0].uri);
+    const url = await pickImageAsync();
+    console.log("uploadImageHandler: ", url)
+    if (url) {
+      setSelectedImageUri(url);
     }
   }
 

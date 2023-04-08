@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Pressable, TouchableOpacity, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import DisplayMode from '../components/DisplayComponent';
 import MapDisplay from '../components/MapDisplay';
@@ -74,7 +74,6 @@ const HomeScreen = () => {
     <View style={styles.container}>
 
       <Header title={'My Notes'} />
-      
       <DisplayMode toggleMode={toggleMode} handleMapMode={handleMapMode} />
 
       {toggleMode ?

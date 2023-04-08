@@ -84,8 +84,6 @@ const NoteScreen = ({ route }) => {
             style={styles.image}
             loadingStyle={{ size: 'large', color: 'blue' }}
             isShowActivity={false}
-            //placeholderSource={require('../../assets/add-photo-icon-on-white-260nw-221329180.webp')}
-            //placeholderStyle={styles.placeholderStyle}
             source={{ uri: selectedImageUri}}
           />
         </TouchableOpacity>
