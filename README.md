@@ -1,5 +1,6 @@
 # notes-app
 - React Native Expo App
+- node version >= 6.0.0
 - react-native version 0.71.6
 - expo version 48.0.10
 
@@ -10,7 +11,6 @@
 
 # Install and Run the app
 - download Expo go app from app store or google play
-- node version >= 6.0.0
 - clone the project
 - `cd notes-app`
 - make sure that the phone and the computer are connected to the same **wifi** (in case you are using physical device)
