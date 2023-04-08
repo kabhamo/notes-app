@@ -17,14 +17,18 @@ const HomeScreen = () => {
   const [coordinates] = useLocation()
   const [noteCol, setNoteCol] = useState([]);
   const [toggleMode, setToggleMode] = useState(false); //listMode is default
+  const [online, setOnline] = useState(true)
   
   useEffect(() => { 
     navigation.addListener('beforeRemove', (e) => { 
       // Prevent default behavior of leaving the screen
       //we want to sign out only using the button
       e.preventDefault();
+      if (!online) {
+        navigation.dispatch(e.data.action)
+      }
     })
-  }, [])
+  }, [online])
   
   //fetch datta from firebase
   useEffect(() => {
@@ -52,6 +56,7 @@ const HomeScreen = () => {
   }, [])
 
   const handleSignOut = () => {
+    setOnline(false)
     auth
       .signOut()
       .then(async () => {
