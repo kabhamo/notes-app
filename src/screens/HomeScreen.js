@@ -1,22 +1,22 @@
 import { View, Text, FlatList, StyleSheet, Pressable, TouchableOpacity, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import DisplayMode from '../components/DisplayComponent';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MapDisplay from '../components/MapDisplay';
 import { useNavigation } from '@react-navigation/native';
 import { firebase, auth } from '../../config';
-import { Octicons, Entypo } from '@expo/vector-icons';
+import { Octicons, Entypo, Foundation, Ionicons } from '@expo/vector-icons';
 import { storeData } from '../services/asyncStorage';
 import useLocation from '../services/useLocation';
 import NoteCard from '../components/NoteCard';
 import Header from '../components/Header';
 
 const KEEPLOGGEDIN = '@keepLoggedIn';
+const Tab = createMaterialBottomTabNavigator();
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [coordinates] = useLocation()
   const [noteCol, setNoteCol] = useState([]);
-  const [toggleMode, setToggleMode] = useState(false); //listMode is default
   const [online, setOnline] = useState(true)
   
   useEffect(() => { 
@@ -65,21 +65,15 @@ const HomeScreen = () => {
       })
       .catch(error => alert(error.message))
   }
-  
-  const handleMapMode = (isOne) => { 
-    setToggleMode(isOne)
+
+  const MapMode = () => { 
+    return (
+      <MapDisplay data={noteCol} coordinates={coordinates} />
+    );
   }
-
-  return (
-    <View style={styles.container}>
-
-      <Header title={'My Notes'} />
-      <DisplayMode toggleMode={toggleMode} handleMapMode={handleMapMode} />
-
-      {toggleMode ?
-        <MapDisplay data={noteCol} coordinates={coordinates} />
-        :
-        <FlatList
+  const ListMode = () => { 
+    return (
+      <FlatList
         data={noteCol.length > 0 ? noteCol : [{id:0,text:""}]}
         renderItem={({ item }) => {
           if (noteCol.length > 0) {
@@ -98,24 +92,50 @@ const HomeScreen = () => {
               </View>
               )
           }
-      }}
+        }}
         keyExtractor={(item) => item.id}
-        />}
+        />
+      );
+  }
+
+  return (
+    <View style={styles.container}>
+
+      <Header title={'My Notes'} />
       
       <View style={styles.btns}>
         <TouchableOpacity
           style={{alignItems:'flex-end', padding:'3%'}}
           onPress={handleSignOut} >
-          <Octicons name="sign-in" size={45} color='#6c63ff' />
-          {/*<Entypo name='back' size={45} color='#6c63ff'/>*/}
+          <Octicons name="sign-in" size={45} color='#66347F' />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={{alignItems:'flex-end', padding:'3%'}}
           onPress={() => navigation.navigate('AddNoteScreen')} >
-          <Entypo name='add-to-list' size={45} color='#6c63ff'/>
+          <Entypo name='add-to-list' size={45} color='#66347F'/>
         </TouchableOpacity>
       </View>
+
+      <Tab.Navigator
+        initialRouteName="ListMode"
+        activeColor="#FEFAE0"
+        barStyle={{ backgroundColor: '#6c63ff' }}>
+        
+        <Tab.Screen name="ListMode" component={ListMode}
+          options={{
+            tabBarLabel: 'ListMode',
+            tabBarIcon: () => (
+              <Foundation name="list" size={28} color="#66347F" />
+            )}} />
+        
+        <Tab.Screen name="MapMode" component={MapMode} options={{
+            tabBarLabel: 'MapMode',
+            tabBarIcon: () => (
+              <Ionicons name="map-outline" size={28} color="#66347F" />
+            )}} />
+
+      </Tab.Navigator>
 
     </View>
   )
@@ -125,7 +145,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 15
+    gap: 15,
   },
   title: {
     marginTop: 0,

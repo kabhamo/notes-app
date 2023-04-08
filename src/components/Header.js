@@ -9,6 +9,7 @@ const Header = ({title}) => {
   )
 }
 
+
 const styles = StyleSheet.create({
     title: {
         marginTop: 0,

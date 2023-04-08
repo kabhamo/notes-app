@@ -48,11 +48,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "b70cc141-6d9b-43cc-bd95-96a1d5c1ef68"
-      }
-    },
     "owner": "kabhamo"
   }
 }
