@@ -1,7 +1,8 @@
 import {
-  View, SafeAreaView, ScrollView, StyleSheet,
+  View, SafeAreaView, StyleSheet,
   Keyboard, TouchableWithoutFeedback,
-  TouchableOpacity, Platform, KeyboardAvoidingView
+  TouchableOpacity, Platform, KeyboardAvoidingView,
+  useWindowDimensions, Dimensions
 } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
@@ -13,9 +14,13 @@ import Input from '../components/Input';
 import Button from '../components/Button'
 import Header from '../components/Header';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 const AddNoteScreen = () => {
   const navigation = useNavigation();
-  const [coordinates] = useLocation()
+  const [coordinates] = useLocation();
+  const { height, width } = useWindowDimensions();
   const [selectedImageUri, setSelectedImageUri] = useState(null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -24,7 +29,10 @@ const AddNoteScreen = () => {
   const handleAdd = () => { 
     if (title && title.length > 0) { 
       firebase.firestore().collection('notes')
-      .add({ title: title, body: body, date: now, coordinates:coordinates, imageUri: selectedImageUri})
+        .add({
+          title: title, body: body, date: now, coordinates: coordinates,
+          imageUri: selectedImageUri
+        })
       .then((res) => { 
         setTitle('')
         setBody('')
@@ -56,29 +64,10 @@ const AddNoteScreen = () => {
       xhr.open("GET", uri, true); // fetch the blob from uri in async mode
       xhr.send(null);  // no initial data
     });
-
     const fileRef = firebase.database().ref().child('imageUri')
     const snapshot = fileRef.set(blob) //Add the blob to database
       .then((res) => console.log("snapshot adding result: ", res))
-      .catch((ex)=>console.log("Error while adding to database: ", ex))
-    snapshot.on(firebase.storage.TaskEvent.STATE_CHANGED,
-      () => { 
-        //setUploading(true)
-      }, (error) => { 
-        //setUploading(false)
-        console.log("Error snapshot: ", error)
-        blob.close()
-        return
-    },
-      () => { 
-        snapshot.snapshot.ref.getDownloadURL().then((url) => { 
-          //setUploading(false)
-          console.log("Download URL: ", url)
-          setSelectedImageUri(url)
-          blob.close()
-          return url
-        })
-      })
+      .catch((ex) => console.log("Error while adding to database: ", ex))
   }
 
   const pickImageAsync = async () => {
@@ -94,7 +83,8 @@ const AddNoteScreen = () => {
     });
     if (!result.canceled) {
       setSelectedImageUri(result.assets[0].uri);
-      const uploadUrl = await uploadImageAsync(result.assets[0].uri);
+      console.log("Download URL: ", result.assets[0].uri)
+      //const uploadUrl = await uploadImageAsync(result.assets[0].uri);
     } else {
       alert('You did not select any image.');
     }
@@ -102,22 +92,25 @@ const AddNoteScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       
-            <View style={ styles.container }>
-    
-              <Header title={'New Note'}/>
+          <View style={styles.container}>
+            
+            <View style={styles.headerContainer}>
+                <Header title={'New Note'}/>
+            </View>
+              
               <Input
+                styleInput={styles.inputTitle}
                 placeholder='Title'
                 value={title}
                 onChangeText={(text) => setTitle(text)}/>
             
               <Input
-                styleInput={{height:'30%'}}
+                styleInput={styles.inputBody}
                 placeholder='Body'
                 value={body}
                 multiline
@@ -141,37 +134,49 @@ const AddNoteScreen = () => {
                 <Button styleButton={{backgroundColor:'#FA9884'}} title={'Cancele'} onPress={() => navigation.navigate('HomeScreen')} />
               </View>
               
-              </View>
+          </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-      </ScrollView>
     </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: '8%',
+    justifyContent: Platform.OS == 'android' && 'center',
+    alignItems: 'center',
+    //gap: Platform.OS == 'android' ? 0 : '8%', //!check
+  },
+  headerContainer: {
+    width: windowWidth,
+    marginBottom: '3%',
+    //marginBottom:10,
   },
   imageContainer: {
-    width: '90%',
-    height: '70%',
-    margin: 8,
+    width: windowWidth* 0.8,
+    height: windowHeight* 0.3,
     borderWidth: 3,
     borderRadius: 5,
     borderColor: "#6c63ff",
-    alignItems: 'flex-end',
-    padding: '3%'
+    padding: '3%',
   },
   image: {
     width: '100%',
     height: '100%',
-    alignSelf: 'center' 
+    alignSelf: 'center'
   },
   placeholderStyle: {
     width: '100%',
     height: '100%',
-    alignSelf: 'center' 
+    alignSelf: 'center',
+  },
+  inputTitle: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.08
+  },
+  inputBody: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.2,
   },
 })
 

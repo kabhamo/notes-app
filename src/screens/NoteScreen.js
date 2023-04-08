@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Image, StyleSheet, KeyboardAvoidingView, SafeAreaView, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import { firebase } from '../../config';
 import Header from '../components/Header';
@@ -6,6 +6,9 @@ import Input from '../components/Input';
 import Button from '../components/Button'
 import NoteCard from '../components/NoteCard';
 import { useNavigation } from '@react-navigation/native';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const NoteScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -40,75 +43,84 @@ const NoteScreen = ({ route }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Header title={'Note Details'} />
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        
+        <View style={styles.headerContainer}>
+          <Header title={'Note Details'} />
+        </View>
 
-      <Input
-        styleInput={styles.TitleInput}
-        placeholder='Title'
-        value={newTitle}
-        onChangeText={(text) => setTitle(text)}/>
-      
-      <Input
-        styleInput={styles.BodyInput}
-        placeholder='Body'
-        value={newBody}
-        multiline
-        onChangeText={(text) => setBody(text)}/>
+        <Input
+          styleInput={styles.TitleInput}
+          placeholder='Title'
+          value={newTitle}
+          onChangeText={(text) => setTitle(text)}/>
+          
+        <Input
+          styleInput={styles.BodyInput}
+          placeholder='Body'
+          value={newBody}
+          multiline
+          onChangeText={(text) => setBody(text)}/>
 
-      {imageUri ? <View style={styles.imageContainer}>
-      <Image
-          source={{uri: imageUri}}
-          style={{
-            height: "100%",
-            width: '100%',
-          }}
-           />
-      </View> :
-        <NoteCard item={{ title: `No image was added to ${newTitle} note`, descripcion: null }}
-          cardStyle={styles.NoteCard} titleStyle={styles.NoteCardTitle} />}
-      
-      <NoteCard item={{ title: noteDate.toUTCString(), descripcion: null }}
-        cardStyle={styles.NoteCard} titleStyle={styles.NoteCardTitle} />
-      
-      <View style={{ flexDirection: 'row', columnGap: '35%', justifyContent: 'center' }}>
-        <Button
-          styleButton={{  width: '40%' }}
-          title={'Save'} onPress={handleUpdate} />
-        <Button styleButton={{ backgroundColor: '#CE5959', width: '30%' }}
-          title={'Delete'} onPress={handleDelete} />
-      </View>
-    </View>
+        {imageUri ?
+          <View style={styles.imageContainer}>
+            <Image
+                source={{uri: imageUri}}
+                style={styles.image}
+                />
+          </View>
+          :
+          <NoteCard
+            item={{ title: `No image was added to ${newTitle} note`, descripcion: null }}
+            cardStyle={styles.NoteCard} titleStyle={styles.NoteCardTitle} />
+        }
+          
+        <NoteCard item={{ title: noteDate.toUTCString(), descripcion: null }}
+          cardStyle={styles.NoteCard} titleStyle={styles.NoteCardTitle} />
+        
+        <View style={styles.btnsContainer}>
+          <Button
+            styleButton={styles.updateBtn}
+            title={'Save'} onPress={handleUpdate} />
+          <Button styleButton={styles.deleteBtn}
+            title={'Delete'} onPress={handleDelete} />
+        </View>
+
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 18
+    alignItems: 'center',
+  },
+  headerContainer: {
+    width: windowWidth,
+    marginBottom: '3%',
+    //marginBottom:10,
   },
   TitleInput: {
-    marginTop: 0,
-    fontSize: 18,
-    paddingVertical: 10,
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.08,
   },
   BodyInput: {
-    marginTop: 0,
-    height: '20%',
-    fontSize: 18,
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.2,
   },
   NoteCard: {
-    marginTop: 0,
-    width:'80%'
+    width: windowWidth * 0.8,
   },
   NoteCardTitle: {
     fontSize: 16,
   },
   imageContainer: {
-    width: '90%',
-    height: '25%',
-    margin: 8,
-    marginTop : 0,
+    width: windowWidth* 0.8,
+    height: windowHeight* 0.3,
     borderWidth: 3,
     borderRadius: 5,
     borderColor: "#6c63ff",
@@ -120,34 +132,16 @@ const styles = StyleSheet.create({
     height: '100%',
     alignSelf: 'center' 
   },
-
-
-
-  btn: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: 12,
-      paddingHorizontal: 32,
-      borderRadius: 4,
-      elevation: 3,
-      backgroundColor: '#009FBD',
+  btnsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center' 
   },
-  title: {
-    marginTop: 0,
-    paddingVertical: 5,
-    borderWidth: 1,
-    borderColor: '#20232a',
-    backgroundColor: '#0B2447',
-    color: '#A5D7E8',
-    textAlign: 'center',
-    fontSize: 30,
-    fontWeight: 'bold',
+  updateBtn: {
+    width: windowWidth*0.4
   },
-  date: {
-    padding: 5,
-    marginBottom: 5,
-    backgroundColor: '#F3E8FF',
-    textAlign:'center'
+  deleteBtn: {
+    backgroundColor: '#CE5959',
+    width: windowWidth*0.3
   },
 })
 
