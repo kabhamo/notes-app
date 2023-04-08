@@ -111,10 +111,11 @@ const AddNoteScreen = () => {
           style={styles.container}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       
-            <View style={ styles.container }>
+          <View style={styles.container}>
+            
             <View style={styles.headerContainer}>
                 <Header title={'New Note'}/>
-              </View>
+            </View>
               
               <Input
                 styleInput={styles.inputTitle}
@@ -147,7 +148,7 @@ const AddNoteScreen = () => {
                 <Button styleButton={{backgroundColor:'#FA9884'}} title={'Cancele'} onPress={() => navigation.navigate('HomeScreen')} />
               </View>
               
-              </View>
+          </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     </SafeAreaView>
@@ -174,8 +175,8 @@ const styles = StyleSheet.create({
     padding: '3%',
   },
   image: {
-    width: '90%',
-    height: '90%',
+    width: '100%',
+    height: '100%',
     alignSelf: 'center'
   },
   placeholderStyle: {
