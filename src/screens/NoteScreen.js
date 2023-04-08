@@ -1,11 +1,15 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { firebase } from '../../config';
+import Header from '../components/Header';
+import Input from '../components/Input';
+import Button from '../components/Button'
+import NoteCard from '../components/NoteCard';
 import { useNavigation } from '@react-navigation/native';
 
 const NoteScreen = ({ route }) => {
   const navigation = useNavigation();
-  const {id,title,body,date, coordinates } = route.params
+  const {id,title,body,date, coordinates, imageUri } = route.params
   const [newTitle, setTitle] = useState(title);
   const [newBody, setBody] = useState(body);
   const [noteDate, setDate] = useState(new Date(date.seconds*1000));
@@ -37,35 +41,42 @@ const NoteScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Note Details</Text>
+      <Header title={'Note Details'} />
 
-      <TextInput
-          placeholder='Title'
-          value={newTitle}
-          onChangeText={(text) => setTitle(text)}
-          style={ styles.input }
-      />
-      <TextInput
-          placeholder='Body'
-          value={newBody}
-          multiline
-          onChangeText={(text) => setBody(text)}
-          style={[styles.input, {height:'25%'}]}
-      />
-
-      <Text style={styles.date}>Date: {noteDate.toISOString()}</Text>
-      <Text style={styles.date}>{`coordinates - long: ${coordinates.longitude} lat: ${coordinates.latitude}`}</Text>
-
-      <View style={{flexDirection:'row' , columnGap:'50%', justifyContent:'center'}}>
-        <TouchableOpacity style={styles.btn}
-          onPress={handleUpdate}>
-          <Text>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.btn, { backgroundColor: '#CE5959' }]}
-          onPress={handleDelete}>
-          <Text>Delete</Text>
-        </TouchableOpacity>
+      <Input
+        styleInput={styles.TitleInput}
+        placeholder='Title'
+        value={newTitle}
+        onChangeText={(text) => setTitle(text)}/>
       
+      <Input
+        styleInput={styles.BodyInput}
+        placeholder='Body'
+        value={newBody}
+        multiline
+        onChangeText={(text) => setBody(text)}/>
+
+      {imageUri ? <View style={styles.imageContainer}>
+      <Image
+          source={{uri: imageUri}}
+          style={{
+            height: "100%",
+            width: '100%',
+          }}
+           />
+      </View> :
+        <NoteCard item={{ title: `No image was added to ${newTitle} note`, descripcion: null }}
+          cardStyle={styles.NoteCard} titleStyle={styles.NoteCardTitle} />}
+      
+      <NoteCard item={{ title: noteDate.toUTCString(), descripcion: null }}
+        cardStyle={styles.NoteCard} titleStyle={styles.NoteCardTitle} />
+      
+      <View style={{ flexDirection: 'row', columnGap: '35%', justifyContent: 'center' }}>
+        <Button
+          styleButton={{  width: '40%' }}
+          title={'Save'} onPress={handleUpdate} />
+        <Button styleButton={{ backgroundColor: '#CE5959', width: '30%' }}
+          title={'Delete'} onPress={handleDelete} />
       </View>
     </View>
   )
@@ -74,16 +85,44 @@ const NoteScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 20
+    gap: 18
   },
-  input: {
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderColor: '#009FBD',
-    borderWidth:1,
+  TitleInput: {
+    marginTop: 0,
+    fontSize: 18,
+    paddingVertical: 10,
+  },
+  BodyInput: {
+    marginTop: 0,
+    height: '20%',
+    fontSize: 18,
+  },
+  NoteCard: {
+    marginTop: 0,
+    width:'80%'
+  },
+  NoteCardTitle: {
+    fontSize: 16,
+  },
+  imageContainer: {
+    width: '90%',
+    height: '25%',
+    margin: 8,
+    marginTop : 0,
+    borderWidth: 3,
+    borderRadius: 5,
+    borderColor: "#6c63ff",
+    alignItems: 'flex-end',
+    padding: '3%'
+  },
+  image: {
     width: '100%',
-    height:'8%'
+    height: '100%',
+    alignSelf: 'center' 
   },
+
+
+
   btn: {
       alignItems: 'center',
       justifyContent: 'center',

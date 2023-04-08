@@ -7,6 +7,8 @@ import { firebase, auth } from '../../config';
 import { Entypo } from '@expo/vector-icons';
 import { storeData } from '../services/asyncStorage';
 import useLocation from '../services/useLocation';
+import NoteCard from '../components/NoteCard';
+import Header from '../components/Header';
 
 const KEEPLOGGEDIN = '@keepLoggedIn';
 
@@ -22,8 +24,15 @@ const HomeScreen = () => {
       .onSnapshot((querySnapshot) => { 
         const newNotes = [];
         querySnapshot.forEach((doc) => { 
-          const { title, body, date, coordinates } = doc.data()
-          newNotes.push({ id: doc.id, title: title, body: body, date: date, coordinates: coordinates})
+          const { title, body, date, coordinates, imageUri } = doc.data()
+          newNotes.push({
+            id: doc.id,
+            title: title,
+            body: body,
+            date: date,
+            coordinates: coordinates,
+            imageUri: imageUri
+          })
         })
         setNoteCol(newNotes)
       })
@@ -46,10 +55,10 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
 
-      <Text style={styles.title}>My Notes</Text>
+      <Header title={'My Notes'} />
       
-      {/* Here will be the render condithion for list/map mode  */}
       <DisplayMode toggleMode={toggleMode} handleMapMode={handleMapMode} />
+
       {toggleMode ?
         <MapDisplay data={noteCol} coordinates={coordinates} />
         :
@@ -61,7 +70,7 @@ const HomeScreen = () => {
               <View style={styles.noteView}>
                 <Pressable
                   onPress={() => navigation.navigate('NoteScreen', item)}>
-                  <Text style={styles.text} >{item.title}</Text>
+                  <NoteCard item={{title:item.title, descripcion:item.body}} />
                 </Pressable>
               </View>
             )
@@ -74,18 +83,19 @@ const HomeScreen = () => {
           }
       }}
         keyExtractor={(item) => item.id}
-      />}
+        />}
+      
       <View style={styles.btns}>
         <TouchableOpacity
           style={{alignItems:'flex-end', padding:'3%'}}
           onPress={handleSignOut} >
-          <Entypo name='back' size={45} color='#A5D7E8'/>
+          <Entypo name='back' size={45} color='#6c63ff'/>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={{alignItems:'flex-end', padding:'3%'}}
           onPress={() => navigation.navigate('AddNoteScreen')} >
-          <Entypo name='plus' size={45} color='#A5D7E8'/>
+          <Entypo name='plus' size={45} color='#6c63ff'/>
         </TouchableOpacity>
       </View>
 
@@ -101,7 +111,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 0,
-    paddingVertical: 5,
+    paddingVertical: '5%',
     borderWidth: 1,
     borderColor: '#20232a',
     backgroundColor: '#0B2447',
