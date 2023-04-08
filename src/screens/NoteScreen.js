@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { firebase } from '../../config';
 import Header from '../components/Header';
 import Input from '../components/Input';
+import Button from '../components/Button'
 import NoteCard from '../components/NoteCard';
 import { useNavigation } from '@react-navigation/native';
 
@@ -70,16 +71,12 @@ const NoteScreen = ({ route }) => {
       <NoteCard item={{ title: noteDate.toUTCString(), descripcion: null }}
         cardStyle={styles.NoteCard} titleStyle={styles.NoteCardTitle} />
       
-      <View style={{flexDirection:'row' , columnGap:'50%', justifyContent:'center'}}>
-        <TouchableOpacity style={styles.btn}
-          onPress={handleUpdate}>
-          <Text>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.btn, { backgroundColor: '#CE5959' }]}
-          onPress={handleDelete}>
-          <Text>Delete</Text>
-        </TouchableOpacity>
-      
+      <View style={{ flexDirection: 'row', columnGap: '35%', justifyContent: 'center' }}>
+        <Button
+          styleButton={{  width: '40%' }}
+          title={'Save'} onPress={handleUpdate} />
+        <Button styleButton={{ backgroundColor: '#CE5959', width: '30%' }}
+          title={'Delete'} onPress={handleDelete} />
       </View>
     </View>
   )
