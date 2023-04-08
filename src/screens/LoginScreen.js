@@ -1,4 +1,4 @@
-import { View, KeyboardAvoidingView,Image, StyleSheet } from 'react-native'
+import { View, KeyboardAvoidingView,Image, StyleSheet, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { auth } from '../../config';
 import { useNavigation } from '@react-navigation/native';
@@ -48,7 +48,7 @@ const LoginScreen = () => {
   return (
       <KeyboardAvoidingView
           style={ styles.container }
-          behavior="padding">
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           
           <Image
             source={require('../../assets/loginImage.png')}

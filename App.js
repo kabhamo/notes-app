@@ -1,5 +1,4 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import HomeScreen from './src/screens/HomeScreen'
 import AddNoteScreen from './src/screens/AddNoteScreen'
 import NoteScreen from './src/screens/NoteScreen';
@@ -8,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
+
 
 export default function App() {
   return (

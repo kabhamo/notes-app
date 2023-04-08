@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   btns: {
     flexDirection: 'row',
     alignSelf: 'center',
-    columnGap:'190%'
+    //columnGap:'190%'
   },
 
 })
