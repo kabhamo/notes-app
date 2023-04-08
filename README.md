@@ -19,5 +19,6 @@
 - 
 
 # Media
-<img src="asset/add-photo-icon-on-white-260nw-221329180.webp" width="300" height="600" >
-![alt text](https://github.com/kabhamo/notes-app/blob/main/assets/add-photo-icon-on-white-260nw-221329180.webp?raw=true)
+<img src="assets/readmeAssets/IOS-HomeScreen.png" width="200" height="400" ><img src="assets/readmeAssets/Android-HomeScreen.png" width="200" height="400" >
+
+<img src="assets/readmeAssets/IOS-MapMode.png" width="200" height="400" ><img src="assets/readmeAssets/IOS-AddNoteScreen.png" width="200" height="400" ><img src="assets/readmeAssets/IOS-NoteScreen.png" width="200" height="400" >
