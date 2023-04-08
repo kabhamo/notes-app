@@ -27,6 +27,6 @@
 - Firebase
 
 # Media
-<img src="assets/readmeAssets/IOS-HomeScreen.png" width="200" height="400" ><img src="assets/readmeAssets/Android-HomeScreen.png" width="200" height="400" >
+<img src="assets/readmeAssets/IOS-HomeScreen.png" width="200" height="400" ><img src="assets/readmeAssets/Android-EmptyHomeScreen.png" width="200" height="400" ><img src="assets/readmeAssets/IOS-EmptyHomeScreen.png" width="200" height="400" >
 
-<img src="assets/readmeAssets/IOS-MapMode.png" width="200" height="400" ><img src="assets/readmeAssets/IOS-AddNoteScreen.png" width="200" height="400" ><img src="assets/readmeAssets/IOS-NoteScreen.png" width="200" height="400" >
+<img src="assets/readmeAssets/IOS-MapScreen.png" width="200" height="400" ><img src="assets/readmeAssets/IOS-AddNoteScreen.png" width="200" height="400" ><img src="assets/readmeAssets/IOS-NoteScreen.png" width="200" height="400" >
