@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const NoteCard = ({ item }) => (
-    <View style={styles.NoteCard}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.descripcion}>{item.descripcion}</Text>
+const NoteCard = ({ item, cardStyle, titleStyle, descStyle }) => (
+    <View style={[styles.NoteCard, cardStyle]}>
+        <Text style={[styles.title, titleStyle]}>{item?.title}</Text>
+        {item?.descripcion ?
+            <Text style={[styles.descripcion, descStyle]}>{item?.descripcion}</Text>
+        : null }
     </View>
 );
 

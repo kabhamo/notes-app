@@ -24,8 +24,15 @@ const HomeScreen = () => {
       .onSnapshot((querySnapshot) => { 
         const newNotes = [];
         querySnapshot.forEach((doc) => { 
-          const { title, body, date, coordinates } = doc.data()
-          newNotes.push({ id: doc.id, title: title, body: body, date: date, coordinates: coordinates})
+          const { title, body, date, coordinates, imageUri } = doc.data()
+          newNotes.push({
+            id: doc.id,
+            title: title,
+            body: body,
+            date: date,
+            coordinates: coordinates,
+            imageUri: imageUri
+          })
         })
         setNoteCol(newNotes)
       })
