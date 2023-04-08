@@ -88,7 +88,7 @@ const HomeScreen = () => {
           } else { 
             return (
               <View style={styles.noteView}>
-                <Text style={styles.empty}>There is no notes, go and create new one</Text>      
+                <NoteCard cardStyle={styles.empty} item={{title:'There is no notes for today!'}} />
               </View>
               )
           }
@@ -166,7 +166,8 @@ const styles = StyleSheet.create({
   empty: {
     padding: 5,
     marginBottom: 5,
-    backgroundColor: '#F3E8FF',
+    backgroundColor: "#ADA2FF",
+    borderBottomColor: "#937DC2",
     textAlign:'center'
   },
   btns: {
