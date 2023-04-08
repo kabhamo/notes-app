@@ -2,13 +2,13 @@ import {
   View, SafeAreaView, StyleSheet,
   Keyboard, TouchableWithoutFeedback,
   TouchableOpacity, Platform, KeyboardAvoidingView,
-  useWindowDimensions, Dimensions
+  Dimensions
 } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../../config'
 import useLocation from '../services/useLocation';
-import * as ImagePicker from 'expo-image-picker';
+import { pickImageAsync } from '../services/uploadImage';
 import ImageLoad from 'react-native-image-placeholder';
 import Input from '../components/Input';
 import Button from '../components/Button'
@@ -20,7 +20,6 @@ const windowHeight = Dimensions.get('window').height;
 const AddNoteScreen = () => {
   const navigation = useNavigation();
   const [coordinates] = useLocation();
-  const { height, width } = useWindowDimensions();
   const [selectedImageUri, setSelectedImageUri] = useState(null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -46,49 +45,12 @@ const AddNoteScreen = () => {
     }
   }
 
-  //source code: 
-  //https://dev.to/adii9/uploading-images-to-firebase-storage-in-react-native-with-expo-workflow-24kj
-  async function uploadImageAsync(uri) {
-    // Why are we using XMLHttpRequest? See:
-    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (ex) {
-        console.log("xhr.onerror:" ,ex);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob"; // use BlobModule's UriHandler
-      xhr.open("GET", uri, true); // fetch the blob from uri in async mode
-      xhr.send(null);  // no initial data
-    });
-    const fileRef = firebase.database().ref().child('imageUri')
-    const snapshot = fileRef.set(blob) //Add the blob to database
-      .then((res) => console.log("snapshot adding result: ", res))
-      .catch((ex) => console.log("Error while adding to database: ", ex))
-  }
-
-  const pickImageAsync = async () => {
-    const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
-    }
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All, 
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,   
-    });
-    if (!result.canceled) {
+  const uploadImageHandler = async () => { 
+    const result = await pickImageAsync();
+    if (result) {
       setSelectedImageUri(result.assets[0].uri);
-      console.log("Download URL: ", result.assets[0].uri)
-      //const uploadUrl = await uploadImageAsync(result.assets[0].uri);
-    } else {
-      alert('You did not select any image.');
     }
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -118,7 +80,7 @@ const AddNoteScreen = () => {
             
               <TouchableOpacity
                   style={styles.imageContainer}
-                  onPress={pickImageAsync} >
+                  onPress={uploadImageHandler} >
                     <ImageLoad
                     style={styles.image}
                     loadingStyle={{ size: 'large', color: 'blue' }}

@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet, KeyboardAvoidingView, SafeAreaView, Dimensions } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, SafeAreaView, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import { firebase } from '../../config';
 import Header from '../components/Header';
@@ -6,6 +6,8 @@ import Input from '../components/Input';
 import Button from '../components/Button'
 import NoteCard from '../components/NoteCard';
 import { useNavigation } from '@react-navigation/native';
+import { pickImageAsync } from '../services/uploadImage';
+import ImageLoad from 'react-native-image-placeholder';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -15,7 +17,8 @@ const NoteScreen = ({ route }) => {
   const {id,title,body,date, coordinates, imageUri } = route.params
   const [newTitle, setTitle] = useState(title);
   const [newBody, setBody] = useState(body);
-  const [noteDate, setDate] = useState(new Date(date.seconds*1000));
+  const [noteDate, setDate] = useState(new Date(date.seconds * 1000));
+  const [selectedImageUri, setSelectedImageUri] = useState(imageUri);
   const now = new Date();
 
   const handleUpdate = () => { 
@@ -25,6 +28,7 @@ const NoteScreen = ({ route }) => {
                   title: newTitle,
                   body: newBody,
                   date: now,
+                  imageUri: selectedImageUri
               })
               .then((res) => {
                   navigation.navigate('HomeScreen')
@@ -40,6 +44,13 @@ const NoteScreen = ({ route }) => {
       .doc(id).delete()
       .then((res) => navigation.navigate('HomeScreen'))
       .catch((ex) => alert(`Error while deleting the note, ${ex}`))
+  }
+
+  const uploadImageHandler = async () => { 
+    const result = await pickImageAsync();
+    if (result) {
+      setSelectedImageUri(result.assets[0].uri);
+    }
   }
 
   return (
@@ -66,12 +77,18 @@ const NoteScreen = ({ route }) => {
           onChangeText={(text) => setBody(text)}/>
 
         {imageUri ?
-          <View style={styles.imageContainer}>
-            <Image
-                source={{uri: imageUri}}
-                style={styles.image}
-                />
-          </View>
+         <TouchableOpacity
+          style={styles.imageContainer}
+          onPress={uploadImageHandler} >
+            <ImageLoad
+            style={styles.image}
+            loadingStyle={{ size: 'large', color: 'blue' }}
+            isShowActivity={false}
+            //placeholderSource={require('../../assets/add-photo-icon-on-white-260nw-221329180.webp')}
+            //placeholderStyle={styles.placeholderStyle}
+            source={{ uri: selectedImageUri}}
+          />
+        </TouchableOpacity>
           :
           <NoteCard
             item={{ title: `No image was added to ${newTitle} note`, descripcion: null }}
