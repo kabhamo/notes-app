@@ -1,7 +1,8 @@
 import {
-  View, SafeAreaView, ScrollView, StyleSheet,
+  View, SafeAreaView, StyleSheet,
   Keyboard, TouchableWithoutFeedback,
-  TouchableOpacity, Platform, KeyboardAvoidingView
+  TouchableOpacity, Platform, KeyboardAvoidingView,
+  useWindowDimensions, Dimensions
 } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
@@ -13,14 +14,17 @@ import Input from '../components/Input';
 import Button from '../components/Button'
 import Header from '../components/Header';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 const AddNoteScreen = () => {
   const navigation = useNavigation();
-  const [coordinates] = useLocation()
+  const [coordinates] = useLocation();
+  const { height, width } = useWindowDimensions();
   const [selectedImageUri, setSelectedImageUri] = useState(null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const now = new Date();
-
   const handleAdd = () => { 
     if (title && title.length > 0) { 
       firebase.firestore().collection('notes')
@@ -102,22 +106,24 @@ const AddNoteScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       
             <View style={ styles.container }>
-    
-              <Header title={'New Note'}/>
+            <View style={styles.headerContainer}>
+                <Header title={'New Note'}/>
+              </View>
+              
               <Input
+                styleInput={styles.inputTitle}
                 placeholder='Title'
                 value={title}
                 onChangeText={(text) => setTitle(text)}/>
             
               <Input
-                styleInput={{height:'30%'}}
+                styleInput={styles.inputBody}
                 placeholder='Body'
                 value={body}
                 multiline
@@ -144,34 +150,46 @@ const AddNoteScreen = () => {
               </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-      </ScrollView>
     </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: '8%',
+    justifyContent: Platform.OS == 'android' && 'center',
+    alignItems: 'center',
+    //gap: Platform.OS == 'android' ? 0 : '8%', //!check
+  },
+  headerContainer: {
+    width: windowWidth,
+    marginBottom: '3%',
+    //marginBottom:10,
   },
   imageContainer: {
-    width: '90%',
-    height: '70%',
-    margin: 8,
+    width: windowWidth* 0.8,
+    height: windowHeight* 0.3,
     borderWidth: 3,
     borderRadius: 5,
     borderColor: "#6c63ff",
-    alignItems: 'flex-end',
-    padding: '3%'
+    padding: '3%',
   },
   image: {
-    width: '100%',
-    height: '100%',
-    alignSelf: 'center' 
+    width: '90%',
+    height: '90%',
+    alignSelf: 'center'
   },
   placeholderStyle: {
     width: '100%',
     height: '100%',
-    alignSelf: 'center' 
+    alignSelf: 'center',
+  },
+  inputTitle: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.08
+  },
+  inputBody: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.2,
   },
 })
 

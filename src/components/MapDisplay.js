@@ -26,15 +26,15 @@ const MapDisplay = ({data, coordinates}) => {
                   style={styles.map}
                   initialRegion={haifaCords}
                   region={currentCords}
-                  showsUserLocation
+                  showsUserLocation={true}
                   onUserLocationChange={() => { }}
               >
                   {data.length > 0 ?
-                    data.map((item) => { 
+                      data.map((item) => { 
                     return (
                         <Marker
                             key={`key_${coordinates.longitude}_${coordinates.latitude}_${item.id}`}
-                            coordinate={{ latitude: coordinates.latitude, longitude: coordinates.longitude, }}
+                            coordinate={item.coordinates}
                             onCalloutPress={() => navigation.navigate('NoteScreen', item)}
                             title={item ? item.title : 'Title'}
                         />
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent: 'center',
         alignItems:'center',
-        gap:'8%',
+        //gap:'8%',
     },
     map: {
         width: '100%',
