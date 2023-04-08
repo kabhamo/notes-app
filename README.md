@@ -2,7 +2,11 @@
 - React Native Expo App
 - react-native version 0.71.6
 - expo version 48.0.10
+
+# Features
 - The app can be run with all platfroms (IOS / Android)
+- Login once, unit the user sign out.
+- See notes of other users and there note's location on the map
 
 # Install and Run the app
 - download Expo go app from app store or google play
